@@ -73,6 +73,9 @@ IF you are using your own machine, and your R version is higher than v 4.2.0, yo
 if (!requireNamespace("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 BiocManager::install("dada2", version = "3.14")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
 BiocManager::install("ShortRead", version = "3.14") 
 ```
 
