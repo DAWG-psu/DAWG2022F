@@ -1,14 +1,16 @@
 # DAWG2022F
 
-### 0. Access to the Roar and open Rstudio server (Be ready to attend the workshop)
+## 0. Access to the Roar and open Rstudio server (Be ready to attend the workshop)
 
-#### 0-1. Request Roar Account
-#### 0-2. Use Roar - open Rstudio Server
-#### 0-3. Install some packages required for the workshop
+0-1. Request Roar Account
+
+0-2. Use Roar - open Rstudio Server
+
+0-3. Install some packages required for the workshop
 
 
 
-#### 0-1. Request Roar Account
+### 0-1. Request Roar Account
 
 1. Go to https://www.icds.psu.edu/computing-services/roar-user-guide/
 2. Click "Account Request" on top right side of the browser
@@ -23,7 +25,7 @@
 6. Click "Submit"
 7. Wait 1-2 business day and you will get an email to be approved
 
-#### 0-2. Use Roar - open Rstudio Server
+### 0-2. Use Roar - open Rstudio Server
 
 1. Go to https://portal2.aci.ics.psu.edu
 2. Log on with your PSU account (You need a approved Roar account to access to the portal)
@@ -56,7 +58,7 @@
 
 7. Click "Connect to Rstudio Server
     
-#### 0-3. Install some packages required for the workshop
+### 0-3. Install some packages required for the workshop
 
 1. Install BioConductor (https://bioconductor.org/install/)
 ```
