@@ -3,6 +3,12 @@
 ### 0. Access to the Roar and open Rstudio server (Be ready to attend the workshop)
 
 #### 0-1. Request Roar Account
+#### 0-2. Use Roar - open Rstudio Server
+#### 0-3. Install some packages required for the workshop
+
+
+
+#### 0-1. Request Roar Account
 
 1. Go to https://www.icds.psu.edu/computing-services/roar-user-guide/
 2. Click "Account Request" on top right side of the browser
@@ -50,7 +56,7 @@
 
 7. Click "Connect to Rstudio Server
     
-#### 0-2. Install some packages required for the workshop
+#### 0-3. Install some packages required for the workshop
 
 1. Install BioConductor (https://bioconductor.org/install/)
 ```
