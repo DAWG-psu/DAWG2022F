@@ -85,11 +85,9 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("ShortRead", version = "3.14") 
 ```
 
-* If you are getting error message saying "package(s) not installed when version(s) same as current; use `force = TRUE` to re-install:", you already have installed either or both of the packages, you can check your installation by typing
-```
-library("dada2")
-library("ShortRead")
-```
+* If you are getting error message saying "package(s) not installed when version(s) same as current; use `force = TRUE` to re-install:", you already have installed either or both of the packages, you can check your installation by selecting "Packages" on the right middle side of your screen, and search for those two packages ("dada2", "ShortRead") - see below screenshot
+
+<img width="720" alt="Screen Shot 2022-09-26 at 1 41 29 PM" src="https://user-images.githubusercontent.com/77017866/192344766-72f23a5c-cd40-46db-aa02-e3b010ddba60.png">
 
 Now you are ready to come to the workshop, before the workshop, I will upload files and script here and let you know. 
 
