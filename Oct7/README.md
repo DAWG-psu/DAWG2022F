@@ -272,6 +272,9 @@ dadaRs <- dada(derepRs, err=errR, multithread=TRUE)
 dadaFs[[1]]
 ```
 
+![image](https://user-images.githubusercontent.com/77017866/193701388-172beb98-48d8-47ce-be00-84c846a225bb.png)
+
+
 11. Merge paired reads
 Merging forward and reverse reads
 
@@ -304,6 +307,13 @@ sum(seqtab.nochim)/sum(seqtab)  # Check proportion of chmeric reads in the datas
 
 
 14. Assign taxonomy
+first we need to download database
+```
+# Run below in your terminal
+wget https://zenodo.org/record/4587955/files/silva_nr99_v138.1_train_set.fa.gz?download=1
+wget https://zenodo.org/record/4587955/files/silva_nr99_v138.1_wSpecies_train_set.fa.gz?download=1
+```
+
 ```
 taxa <- assignTaxonomy(seqs, "Training/silva_nr_v132_train_set.fa.gz")
 taxa.species <- addSpecies(taxa, "Training/silva_species_assignment_v132.fa.gz", verbose=TRUE)
@@ -334,5 +344,16 @@ saveRDS(ps, file = "phyloseq.rds")
 # Restore the object
 readRDS(file = "phyloseq.rds")
 ```
+
+Saving entire environment as .rdata file
+
+![image](https://user-images.githubusercontent.com/77017866/193702370-fcce624d-7438-492c-92ea-7b85501c5155.png)
+
+```
+# Save entire environment to a file
+save("dada2.Rdata")
+load(file = "dada2.Rdata")
+```
+
 
 
