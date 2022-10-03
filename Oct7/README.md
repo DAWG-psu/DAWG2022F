@@ -200,24 +200,39 @@ plotQualityProfile(fnRs.cut[1:4])
 ```
 * Currently plotting function in Rstudio server is not working properly in ROAR due to the Rstudio version issue. Here is the results from above commandlines
 
+![image](https://user-images.githubusercontent.com/77017866/193692303-b61d9f98-ccb2-4957-ae45-82e9e00cb08c.png)
 
+![image](https://user-images.githubusercontent.com/77017866/193685222-e83fb82f-88d4-4f2d-b6f6-0388de8c2e1b.png)
 
+low-complexity reads are problematic. They will interfere when error rate calculates. Please consider using "rm.lowcomplex" function to remove low complex reads - but be careful, it might discard too many of your data
 
+![image](https://user-images.githubusercontent.com/77017866/193692366-cd7b420c-bb2f-43c6-b6e1-0d2fb1d9ed72.png)
+
+you can see from ~250bp, quality score drops notably. Let's consider this to filter and trim sequences in later part
 
 
 7. Filter/Trim reads based on the quality metrics
 ```
 filt_path <- file.path(path, "filtered")
+if(!file_test("-d", filt_path)) dir.create(filt_path)
 filtFs <- file.path(filt_path, paste0(sample.names, "_F_filt.fastq.gz"))
 filtRs <- file.path(filt_path, paste0(sample.names, "_R_filt.fastq.gz"))
 
-out <- filterAndTrim(fnFs.cut, filtFs, fnRs.cut, filtRs, truncLen = c(220,220),
-maxN=0, maxEE=c(2,2), truncQ = 2, compress = TRUE)
-
-out
+# Filter
+for(i in seq_along(fnFs)) {
+  fastqPairedFilter(c(fnFs.cut[i], fnRs.cut[i]), c(filtFs[i], filtRs[i]),
+                    truncLen=c(240,160), 
+                    maxN=0, maxEE=c(2,2), truncQ=2, rm.phix=TRUE,
+                    compress=TRUE, verbose=TRUE)
+}
 ```
 
 filterAndTrim paramters
+```
+?filterAndTrim
+```
+
+![Screen Shot 2022-10-03 at 5 53 43 PM](https://user-images.githubusercontent.com/77017866/193692789-7a4cfc1d-0336-464a-a7ed-601b1671e65d.png)
 
 
 If you don't know what is phred scores (quality score) from fastq - https://support.illumina.com/help/BaseSpace_OLH_009008/Content/Source/Informatics/BS/QualityScoreEncoding_swBS.htm
@@ -227,7 +242,97 @@ If you don't know what is phred scores (quality score) from fastq - https://supp
 
 
 
-8. Model Error rates
+8. Dereplication
+```
+derepFs <- derepFastq(filtFs, verbose=TRUE)
+derepRs <- derepFastq(filtRs, verbose=TRUE)
+# Name the derep-class objects by the sample names
+names(derepFs) <- sample.names
+names(derepRs) <- sample.names
+```
+Dereplication combines all identical sequencing reads into into “unique sequences” with a corresponding “abundance”: the number of reads with that same sequence. Dereplication substantially reduces computation time by eliminating redundant comparisons.
+
+9. Learn the error rates
+```
+dadaFs.lrn <- dada(derepFs, err=NULL, selfConsist = TRUE, multithread=TRUE)
+errF <- dadaFs.lrn[[1]]$err_out
+dadaRs.lrn <- dada(derepRs, err=NULL, selfConsist = TRUE, multithread=TRUE)
+errR <- dadaRs.lrn[[1]]$err_out
+
+plotErrors(dadaFs.lrn[[1]], nominalQ=TRUE)
+```
+
+
+10. Sample Inference
+We are now ready to apply the core sequence-variant inference algorithm to the dereplicated data.
+
+```
+dadaFs <- dada(derepFs, err=errF, multithread=TRUE)
+dadaRs <- dada(derepRs, err=errR, multithread=TRUE)
+dadaFs[[1]]
+```
+
+11. Merge paired reads
+Merging forward and reverse reads
+
+```
+mergers <- mergePairs(dadaFs, derepFs, dadaRs, derepRs, verbose=TRUE)
+# Inspect the merger data.frame from the first sample
+head(mergers[[1]])
+```
+
+12. Constructing the sequence table - sequence counting table
+We can now construct a sequence table of our mouse samples that is analagous to the “OTU table” produced by classical methods.
+
+```
+seqtab <- makeSequenceTable(mergers[names(mergers) != "Mock"])
+dim(seqtab)
+table(nchar(getSequences(seqtab))) # Inspect distribution of sequence lengths
+```
+
+13. Remove chimeras
+
+![image](https://user-images.githubusercontent.com/77017866/193700341-e58a5129-2f17-4ccf-951a-56a26f858cf9.png)
+
+Chimeras are sequences formed from two or more biological sequences joined together. Amplicons with chimeric sequences can form during PCR. Chimeras are rare with shotgun sequencing, but are common in amplicon sequencing when closely related sequences are amplified. Although chimeras can be formed by a number of mechanisms, the majority of chimeras are believed to arise from incomplete extension. During subsequent cycles of PCR, a partially extended strand can bind to a template derived from a different but similar sequence. This then acts as a primer that is extended to form a chimeric sequence ([Smith et al. 2010], [Thompson et al., 2002], [Meyerhans et al., 1990], [Judo et al., 1998], [Odelberg, 1995]).
+
+```
+seqtab.nochim <- removeBimeraDenovo(seqtab, verbose=TRUE)
+dim(seqtab.nochim)
+sum(seqtab.nochim)/sum(seqtab)  # Check proportion of chmeric reads in the dataset
+```
+
+
+14. Assign taxonomy
+```
+taxa <- assignTaxonomy(seqs, "Training/silva_nr_v132_train_set.fa.gz")
+taxa.species <- addSpecies(taxa, "Training/silva_species_assignment_v132.fa.gz", verbose=TRUE)
+```
+
+15. Combine everything as one phyloseq object and save it in your computer
+
+Install phyloseq package
+```
+BiocManager::install("phyloseq")
+library(phyloseq)
+```
+
+Making phyloseq object
+```
+ps <- phyloseq(otu_table(seqtab.nochim), taxa_are_rows=FALSE),
+               tax_table(taxa.species))
+ps
+```
+
+Saving as .rds file
+
+![image](https://user-images.githubusercontent.com/77017866/193701072-f22fbc7b-3a21-4f08-841e-8ba5146d2a4d.png)
+
+```
+# Save an object to a file
+saveRDS(ps, file = "phyloseq.rds")
+# Restore the object
+readRDS(file = "phyloseq.rds")
 ```
 
 
