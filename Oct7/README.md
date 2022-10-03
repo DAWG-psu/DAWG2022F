@@ -40,3 +40,10 @@ Shotgun metagenomic sequencing aims to amplify all the accessible DNA of a mixed
 
 ## DADA2 pipeline
 #### What is DADA2?
+Divisive Amplicon Denoising Algorithm (DADA)
+
+
+
+#### Pipeline overview with annotation
+
+
