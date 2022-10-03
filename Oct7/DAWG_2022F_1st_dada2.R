@@ -21,7 +21,8 @@ library(ShortRead)
 # cd DAWG     # move to the directory with files
 # ls     # check if you can see the list of files
 # pwd   # copy the output of this command - your file directory
-# Processing/filtering 16S rRNA Illumina amplicon dataset
+
+## Processing/filtering 16S rRNA Illumina amplicon dataset
 
 #1-3. Set Working directory and Sort Files ####
 setwd("~/where your downloaded fastq files are")
