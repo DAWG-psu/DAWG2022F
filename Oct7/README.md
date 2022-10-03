@@ -44,6 +44,19 @@ Divisive Amplicon Denoising Algorithm (DADA)
 
 
 
-#### Pipeline overview with annotation
+### Pipeline overview with annotation
+#### 1. Install Packages ####
+If you already install those packages before coming to workshop, please skip this step
+
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install(c("dada2", "Biostrings", "ShortRead")
+library(dada2)
+library(Biostrings)
+library(ShortRead)
+```
+
+#### 2. Set working directory and identify file paths
 
 
