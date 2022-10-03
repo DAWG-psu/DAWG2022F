@@ -28,6 +28,9 @@ Shotgun metagenomic sequencing aims to amplify all the accessible DNA of a mixed
 
 ##### General pipeline of microbiome study
 
+![image](https://user-images.githubusercontent.com/77017866/193704140-a1e80d94-658b-408f-a473-36750aa84bcf.png)
+
+
 1. Sampling
 2. DNA extraction/Library preparation
 3. Sequencing
@@ -328,6 +331,10 @@ library(phyloseq)
 ```
 
 Making phyloseq object
+https://joey711.github.io/phyloseq/
+
+![image](https://user-images.githubusercontent.com/77017866/193704179-37e25e84-62de-4f1a-b172-487d1c3e0430.png)
+
 ```
 ps <- phyloseq(otu_table(seqtab.nochim), taxa_are_rows=FALSE),
                tax_table(taxa.species))
