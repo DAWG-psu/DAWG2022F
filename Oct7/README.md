@@ -313,13 +313,14 @@ sum(seqtab.nochim)/sum(seqtab)  # Check proportion of chmeric reads in the datas
 first we need to download database
 ```
 # Run below in your terminal
-wget https://zenodo.org/record/4587955/files/silva_nr99_v138.1_train_set.fa.gz?download=1
-wget https://zenodo.org/record/4587955/files/silva_nr99_v138.1_wSpecies_train_set.fa.gz?download=1
+wget https://zenodo.org/record/4587955/files/silva_nr99_v138.1_train_set.fa.gz?download=1 -O silva_nr99_v138.1_train_set.fa.gz
+wget https://zenodo.org/record/4587955/files/silva_species_assignment_v138.1.fa.gz?download=1 -O silva_species_assignment_v138.1.fa.gz
 ```
 
 ```
-taxa <- assignTaxonomy(seqs, "Training/silva_nr_v132_train_set.fa.gz")
-taxa.species <- addSpecies(taxa, "Training/silva_species_assignment_v132.fa.gz", verbose=TRUE)
+set.seed(128)
+taxa <- assignTaxonomy(seqtab.nochim, "silva_nr99_v138.1_train_set.fa.gz", multithread = TRUE)
+taxa.species <- addSpecies(taxa, "silva_species_assignment_v138.1.fa.gz", verbose=TRUE)
 ```
 
 15. Combine everything as one phyloseq object and save it in your computer
