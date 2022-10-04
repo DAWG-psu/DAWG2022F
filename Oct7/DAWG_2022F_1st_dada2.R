@@ -166,11 +166,11 @@ write.table(track, "Processed-16S-Sequencing-Counts.txt")
 ##14. Assign taxonomy ####
 #Below lines should be run uner terminal
 #wget https://zenodo.org/record/4587955/files/silva_nr99_v138.1_train_set.fa.gz?download=1 -O silva_nr99_v138.1_train_set.fa.gz
-#wget https://zenodo.org/record/4587955/files/silva_nr99_v138.1_wSpecies_train_set.fa.gz?download=1 -O silva_nr99_v138.1_wSpecies_train_set.fa.gz
+#wget https://zenodo.org/record/4587955/files/silva_species_assignment_v138.1.fa.gz?download=1 -O silva_species_assignment_v138.1.fa.gz
 
 set.seed(128)
-taxa <- assignTaxonomy(seqtab.nochim, "~/Downloads/Terry/DAWG/silva_nr99_v138.1_train_set.fa.gz", multithread = TRUE)
-taxa.species <- addSpecies(taxa, "~/Downloads/Terry/DAWG/silva_nr99_v138.1_wSpecies_train_set.fa.gz", verbose=TRUE, multithread = TRUE)
+taxa <- assignTaxonomy(seqtab.nochim, "silva_nr99_v138.1_train_set.fa.gz", multithread = TRUE)
+taxa.species <- addSpecies(taxa, "silva_species_assignment_v138.1.fa.gz", verbose=TRUE, multithread = TRUE)
 
 ##15.Combine everything as one phyloseq object and save it in your computer
 
