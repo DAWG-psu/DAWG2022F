@@ -170,7 +170,7 @@ write.table(track, "Processed-16S-Sequencing-Counts.txt")
 
 set.seed(128)
 taxa <- assignTaxonomy(seqtab.nochim, "silva_nr99_v138.1_train_set.fa.gz", multithread = TRUE)
-taxa.species <- addSpecies(taxa, "silva_species_assignment_v138.1.fa.gz", verbose=TRUE, multithread = TRUE)
+taxa.species <- addSpecies(taxa, "silva_species_assignment_v138.1.fa.gz", verbose=TRUE)
 
 ##15.Combine everything as one phyloseq object and save it in your computer
 
