@@ -359,7 +359,7 @@ Saving entire environment as .rdata file
 
 ```
 # Save entire environment to a file
-save("dada2.Rdata")
+save.image("dada2.Rdata")
 load(file = "dada2.Rdata")
 ```
 
