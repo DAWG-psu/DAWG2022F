@@ -190,5 +190,5 @@ saveRDS(ps, file = "phyloseq.rds")
 readRDS(file = "phyloseq.rds")
 
 # Save entire environment to a file
-save("dada2.Rdata")
+save.image("dada2.Rdata")
 load(file = "dada2.Rdata")
