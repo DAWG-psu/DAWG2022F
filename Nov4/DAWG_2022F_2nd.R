@@ -4,6 +4,8 @@
 ### wget https://github.com/DAWG-psu/DAWG2022F/raw/main/Nov4/ps_16s.rds
 setwd("~/scratch")
 phyloseq_16s <- readRDS("ps_16s.rds")
+
+### Remove ASVs from non-bacterial taxa
 phyloseq_16s_filt <- subset_taxa(phyloseq_16s, domain == "Bacteria")
 
 ### Compositional anaylsis of overall microbiome
