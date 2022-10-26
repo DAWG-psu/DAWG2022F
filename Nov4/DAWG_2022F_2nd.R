@@ -8,18 +8,17 @@ phyloseq_16s <- readRDS("ps_16s.rds")
 ### Remove ASVs from non-bacterial taxa
 phyloseq_16s_filt <- subset_taxa(phyloseq_16s, domain == "Bacteria")
 
-### Compositional anaylsis of overall microbiome
+# Compositional anaylsis of overall microbiome
 ### 1. stacked bar plot
 ### convert phyloseq object into designated level of taxonomy (genus)
 library(phyloseq)
 rank_names(phyloseq_16s_filt) # check the taxonomy structure
 phyloseq_genus <- tax_glom(phyloseq_16s, taxrank = "genus") # combine ASVs into genus level
 phyloseq_genus_rel <- transform_sample_counts(phyloseq_genus, function(x) x/sum(x)) # convert data into relative abundance
-phyloseq_genus_rel
-phyloseq_genus_rel_melt <- psmelt(phyloseq_genus_rel) #melt data
+phyloseq_genus_rel_melt <- psmelt(phyloseq_genus_rel) # melt data
 str(phyloseq_genus_rel_melt) # check the data structure
 phyloseq_genus_rel_melt[,"genus"] <- as.character(phyloseq_genus_rel_melt[,"genus"])
-phyloseq_genus_rel_melt[,"genus"][phyloseq_genus_rel_melt$Abundance < 0.1] <- "Other" #convert low abundance taxa into "Other"
+phyloseq_genus_rel_melt[,"genus"][phyloseq_genus_rel_melt$Abundance < 0.1] <- "Other" #convert low abundance taxa (< 0.1) into "Other"
 
 # Check how many genus in your dataset after converting low abundance taxa into "Others"
 Count = length(unique(phyloseq_genus_rel_melt[,"genus"]))
@@ -85,15 +84,15 @@ ggsave("stacked_bar_plot_without_numbers.jpg", plot=plot_without_numbers, width 
 ## 1. Alpha Diversity
 library(ggpubr)
 library(reshape2)
-alpha_diversity <- estimate_richness(phyloseq_16s_filt, measures= c("Observed", "Shannon", "InvSimpson"))
-alpha_comparison <- cbind(alpha_diversity, sample_data(phyloseq_16s_filt))
-melt_plot <- melt(alpha_comparison)
+alpha_diversity <- estimate_richness(phyloseq_16s_filt, measures= c("Observed", "Shannon", "InvSimpson")) # calculate alpha diversity of selected measures
+alpha_comparison <- cbind(alpha_diversity, sample_data(phyloseq_16s_filt)) # add metadata to the alpha diversity output
+melt_plot <- melt(alpha_comparison) # melt data for plotting
 plot_alpha <- ggplot(data = melt_plot, aes(y = value, x = Type_of_sample, fill = Type_of_sample)) +
   geom_boxplot() +
   facet_wrap(~variable, scale="free") +
   theme_minimal() + 
   scale_fill_brewer(palette="Dark2") + 
-  stat_compare_means(label = "p.format") 
+  stat_compare_means(label = "p.format") # wilcox test (non-parametric test) for significance
 plot_alpha
 ggsave("alpha_diversity.jpg", plot = plot_alpha, width = 10, height=7, units= "in", dpi =600)
 
@@ -104,6 +103,7 @@ phyloseq_genus
 # https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full
 #Following step requires samples on rows and ASVs in columns
 otus <- otu_table(phyloseq_genus)
+taxa_are_rows(otus) # Should be "FALSE" if "TRUE" use this command to transpose matrix "otus <- t(otus)"
 #Replace zero values before clr transformation
 #Use CZM method to replace zeros and outputs pseudo-counts (1)
 require(zCompositions)
@@ -119,7 +119,7 @@ phyloesq_genus_CLR <- phyloseq(otu_table(otu.n0.clr, taxa_are_rows=F),
 #PCA
 pc.clr <- prcomp(otu.n0.clr)
 require(compositions)
-# Calculate total variance
+# Calculate total variance (necessary for calculating %variance explained)
 mvar.clr <- mvar(otu.n0.clr)
 row <- rownames(otu.n0.clr)
 # extract first two PCs
@@ -130,11 +130,13 @@ pc_out_meta <- as.data.frame(cbind(pc_out, sample_data(phyloesq_genus_CLR)))
 # Calculate euclidean distance between sample
 dist <- dist(otu.n0.clr, method = "euclidean")
 
-#PERMANOVA (Permutational based ANOVA)
+# PERMANOVA (Permutational based ANOVA) 
+# https://onlinelibrary.wiley.com/doi/full/10.1002/9781118445112.stat07841
 permanova <- vegan::adonis2(dist~Type_of_sample, data=pc_out_meta, perm =999)
-permanova
+permanova # Check PERMANOVA results
 label = paste0("p-value = ",permanova$`Pr(>F)`[1]," (PERMANOVA)") #prepare label for plot
-label
+label # Check p-value
+                                              
 #Getting colors based on your comparisons
 qual_col_pals = brewer.pal.info[brewer.pal.info$category =='qual',]
 col_vector <- unlist(mapply(brewer.pal, 8, "Dark2"))
@@ -148,12 +150,12 @@ PCA_plot <- ggplot(pc_out_meta, aes(x=PC1, y=PC2, color = Type_of_sample)) +
   theme(axis.title = element_text(size=15,color='black')) +
   theme(panel.background = element_rect(fill='white', color = NA),
         plot.background = element_rect(fill = 'white',color = NA),
-        panel.border = element_rect(color='black',fill = NA,size=1))+
-  scale_x_continuous(name = paste("PC1: ", round(pc.clr$sdev[1]^2/mvar.clr*100, digits=1), "%", sep="")) +
-  scale_y_continuous(name = paste("PC2: ", round(pc.clr$sdev[2]^2/mvar.clr*100, digits=1), "%", sep="")) +
+        panel.border = element_rect(color='black',fill = NA,size=1))+ # edit backgroud
+  scale_x_continuous(name = paste("PC1: ", round(pc.clr$sdev[1]^2/mvar.clr*100, digits=1), "%", sep="")) + # %variance explained for PC1
+  scale_y_continuous(name = paste("PC2: ", round(pc.clr$sdev[2]^2/mvar.clr*100, digits=1), "%", sep="")) + # %variance explained for PC2
   scale_color_manual(values= col) +
   theme(legend.title = element_blank()) +
-  annotate("text", x = 15, y =-25, label = label)
+  annotate("text", x = 15, y =-25, label = label) # Add PERMANOVA results to the plot
 PCA_plot
 ggsave("pca.jpg", plot = PCA_plot, width= 10, height=7.5, units="in", dpi=600)
 
