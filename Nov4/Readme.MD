@@ -7,7 +7,6 @@
 
 ![EANJRhPU4AAXbi1](https://user-images.githubusercontent.com/77017866/199869192-df427b6e-b7f7-4028-abb9-eca0f7834225.png)
 
-
 Due to DNA amplification and uneven sequencing depth, microbiome studies using amplicon sequences (i.e., 16s rRNA, ITS) are measuring relative abundance most times.
 
 #### Data normalization, data transformation
@@ -16,6 +15,7 @@ Due to DNA amplification and uneven sequencing depth, microbiome studies using a
 FIGURE 1. High-throughput sequencing data are compositional. (A) illustrates that the data observed after sequencing a set of nucleic acids from a bacterial population cannot inform on the absolute abundance of molecules. The number of counts in a high throughput sequencing (HTS) dataset reflect the proportion of counts per feature (OTU, gene, etc.) per sample, multiplied by the sequencing depth. Therefore, only the relative abundances are available. The bar plots in (B) show the difference between the count of molecules and the proportion of molecules for two features, A (red) and B (gray) in three samples. The top bar graphs show the total counts for three samples, and the height of the color illustrates the total count of the feature. When the three samples are sequenced we lose the absolute count information and only have relative abundances, proportions, or “normalized counts” as shown in the bottom bar graph. Note that features A and B in samples 2 and 3 appear with the same relative abundances, even though the counts in the environment are different. The table below in (C) shows real and perceived changes for each sample if we transition from one sample to another.
 
 #### Compositionality of the data & CLR (Central log-ratio transformation)
+
 Resources:
 
 https://academic.oup.com/bioinformatics/article/34/16/2870/4956011
