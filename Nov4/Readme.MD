@@ -3,25 +3,53 @@
 
 ### Background
 
-Absolute abundance VS relative abundance
+#### Absolute abundance VS relative abundance
 
-Data normalization, data transformation
-Compositionality of the data
-Rarefying
-CLR (Central log-ratio transformation)
+![EANJRhPU4AAXbi1](https://user-images.githubusercontent.com/77017866/199869192-df427b6e-b7f7-4028-abb9-eca0f7834225.png)
 
-Alpha diversity
+
+Due to DNA amplification and uneven sequencing depth, microbiome studies using amplicon sequences (i.e., 16s rRNA, ITS) are measuring relative abundance most times.
+
+#### Data normalization, data transformation
+![fmicb-08-02224-g001](https://user-images.githubusercontent.com/77017866/199869496-8994366f-0b4c-473b-9220-f8ae7d016c6c.jpg)
+
+FIGURE 1. High-throughput sequencing data are compositional. (A) illustrates that the data observed after sequencing a set of nucleic acids from a bacterial population cannot inform on the absolute abundance of molecules. The number of counts in a high throughput sequencing (HTS) dataset reflect the proportion of counts per feature (OTU, gene, etc.) per sample, multiplied by the sequencing depth. Therefore, only the relative abundances are available. The bar plots in (B) show the difference between the count of molecules and the proportion of molecules for two features, A (red) and B (gray) in three samples. The top bar graphs show the total counts for three samples, and the height of the color illustrates the total count of the feature. When the three samples are sequenced we lose the absolute count information and only have relative abundances, proportions, or “normalized counts” as shown in the bottom bar graph. Note that features A and B in samples 2 and 3 appear with the same relative abundances, even though the counts in the environment are different. The table below in (C) shows real and perceived changes for each sample if we transition from one sample to another.
+
+#### Compositionality of the data & CLR (Central log-ratio transformation)
+Resources:
+
+https://academic.oup.com/bioinformatics/article/34/16/2870/4956011
+https://www.frontiersin.org/articles/10.3389/fmicb.2017.02224/full
+https://www.sciencedirect.com/science/article/pii/S1047279716300734?casa_token=YGK32CYqeTsAAAAA:IR19If3X29tjhwB5exvwuxOmROAso2VeFDl_DyQMl0Ju4prNDoYkUNt-OvteQu9pOppGVdOd
+
+#### Alpha diversity
+
 Alpha diversity (α-diversity) is defined as the mean diversity of species in different sites or habitats within a local scale.
-richness, eveness, abundance
-observed, Chao1, Shannon, InvSimpson ...
 
+Different alpha diversity measures
 
-Beta diversity
+https://www.cd-genomics.com/microbioseq/the-use-and-types-of-alpha-diversity-metrics-in-microbial-ngs.html
+
+###### Richness and Evenness
+
+![biodiversity_med](https://user-images.githubusercontent.com/77017866/199870480-85dfbfa9-4558-4aa9-a2bd-51fc69de87e8.jpeg)
+
+#### Beta diversity
 beta diversity is a measure of the similarity or dissimilarity of two communities
 distance between samples based on their similarity
 
-PERMANOVA (Permutational ANOVA)
-ideal for two group comparison - suffling data label (metadata) and see if that provide signifcant differences between trial
+![nihms-1512670-f0001](https://user-images.githubusercontent.com/77017866/199870909-c43a42ca-92cc-4358-8ea2-44ae92c4fa48.jpg)
+
+
+#### PPermutational multivariate analysis of variance (PERMANOVA) using beta diversity measures
+
+https://archetypalecology.wordpress.com/2018/02/21/permutational-multivariate-analysis-of-variance-permanova-in-r-preliminary/
+
+Permutational multivariate analysis of variance (PERMANOVA) is a non-parametric multivariate statistical test. It is used to compare groups of objects and test the null hypothesis that the centroids and dispersion of the groups as defined by measure space are equivalent for all groups. 
+
+![911aea30b9da9c4beb7eae532a1c00c82c51a41b](https://user-images.githubusercontent.com/77017866/199871078-d28ac939-dc11-4666-8904-a8c67aac9d46.png)
+
+
 
 ### Pipeline overview with annotation
 
